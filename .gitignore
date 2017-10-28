@@ -3,6 +3,7 @@
 /.bundle/
 /Gemfile.lock
 /vendor/
+/pkg/
 
 # Emacs
 
