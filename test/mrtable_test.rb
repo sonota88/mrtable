@@ -5,7 +5,8 @@ class MrtableTest < Minitest::Test
     refute_nil ::Mrtable::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
-  end
+  # TODO
+  # def test_it_does_something_useful
+  #   assert false
+  # end
 end
