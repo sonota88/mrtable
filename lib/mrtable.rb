@@ -1,6 +1,5 @@
 # coding: utf-8
 
-require "mrtable/version"
 require "json"
 
 module Mrtable
