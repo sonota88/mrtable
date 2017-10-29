@@ -92,10 +92,10 @@ module Mrtable
 
     ret = json_encode(col)
     if /^\s+/ =~ ret || /\s+$/ =~ ret || /^\-+$/ =~ ret
-      '"' + ret + '"'
-    else
-      ret.gsub("|", "\\|")
+      ret = '"' + ret + '"'
     end
+
+    ret.gsub("|", "\\|")
   end
 
   def self.to_table_row(cols)
