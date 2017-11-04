@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{machine readable table}
   spec.description   = %q{machine readable table}
   spec.homepage      = "https://github.com/sonota88/mrtable"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
