@@ -46,6 +46,32 @@ module Mrtable
       min_len = 3
       maxlens.map { |len| [len, min_len].max }
     end
+
+    def complement(val)
+      num_cols_max = [
+        @header_cols.size,
+        @rows.map { |cols| cols.size }.max
+      ].max
+
+      new_header_cols = Mrtable.complement_cols(
+        @header_cols, num_cols_max, val)
+
+      new_rows = @rows.map { |cols|
+        Mrtable.complement_cols(cols, num_cols_max, val)
+      }
+
+      Table.new new_header_cols, new_rows
+    end
+  end
+
+  def self.complement_cols(cols, num_cols_max, val)
+    (0...num_cols_max).map { |ci|
+      if ci < cols.size
+        cols[ci]
+      else
+        val
+      end
+    }
   end
 
   def self.int?(s)
@@ -167,7 +193,7 @@ module Mrtable
     cols
   end
 
-  def self.parse(text)
+  def self.parse(text, opts = {})
     lines = text.split(/\r?\n/)
     lines2 = lines.reject { |line|
       /^\s*$/ =~ line ||
@@ -185,6 +211,13 @@ module Mrtable
     parsed = stripped.map_col_with_ci { |col, _|
       parse_col col
     }
+
+    if opts.has_key? :complement
+      unless opts[:complement].is_a? String or opts[:complement].nil?
+        raise "opts[:complement] must be String or nil"
+      end
+      parsed = parsed.complement opts[:complement]
+    end
 
     {
       :header_cols => parsed.header_cols,
