@@ -11,9 +11,9 @@ class MrtableTest < Minitest::Test
     | 1 | 2 | 3 |
     EOB
 
-    data = Mrtable.parse(text, :complement => "N/A")
+    header, _ = Mrtable.parse(text, :complement => "N/A")
 
-    assert_equal '["a", "N/A", "N/A"]', data[:header_cols].inspect
+    assert_equal '["a", "N/A", "N/A"]', header.inspect
   end
 
   def test_complement_cols
@@ -22,8 +22,8 @@ class MrtableTest < Minitest::Test
     | 1 |
     EOB
 
-    data = Mrtable.parse(text, :complement => "N/A")
+    _, rows = Mrtable.parse(text, :complement => "N/A")
 
-    assert_equal '["1", "N/A", "N/A"]', data[:rows][0].inspect
+    assert_equal '["1", "N/A", "N/A"]', rows[0].inspect
   end
 end

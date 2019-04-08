@@ -219,10 +219,10 @@ module Mrtable
       parsed = parsed.complement opts[:complement]
     end
 
-    {
-      :header_cols => parsed.header_cols,
-      :rows => parsed.rows
-    }
+    [
+      parsed.header_cols,
+      parsed.rows
+    ]
   end
   
   def self.generate(header_cols, rows)
