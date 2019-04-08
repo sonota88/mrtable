@@ -37,9 +37,9 @@ module Mrtable
         if @header_cols
           cols_at_ci << @header_cols[ci]
         end
-        cols_at_ci.map { |col|
-          Mrtable.col_len(col)
-        }.max
+        cols_at_ci
+          .map { |col| Mrtable.col_len(col) }
+          .max
       end
 
       # compatibility for GFM
@@ -244,6 +244,8 @@ module Mrtable
     lines += padded.rows.map { |cols|
       to_table_row(cols)
     }
-    lines.map { |line| line + "\n" }.join("")
+    lines
+      .map { |line| line + "\n" }
+      .join("")
   end
 end
