@@ -195,11 +195,11 @@ module Mrtable
 
   def self.parse(text, opts = {})
     raw_lines = text.split(/\r?\n/)
-    lines2 = raw_lines.reject { |line|
+    lines = raw_lines.reject { |line|
       /^\s*$/.match?(line) or
       /^\| \-\-\-+ \|/.match?(line)
     }
-    rows = lines2.map { |line|
+    rows = lines.map { |line|
       split_row(line)
     }
     raw = Table.new rows[0], rows[1..-1]
