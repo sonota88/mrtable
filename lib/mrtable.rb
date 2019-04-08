@@ -75,7 +75,7 @@ module Mrtable
   end
 
   def self.int?(s)
-    /^\-?[\d,]+$/ =~ s
+    /^\-?[\d,]+$/.match?(s)
   end
 
   def self.pad_col(col, maxlen)
@@ -116,7 +116,7 @@ module Mrtable
     end
 
     ret = json_encode(col)
-    if /^\s+/ =~ ret or /\s+$/ =~ ret or /^\-+$/ =~ ret
+    if /^\s+/.match?(ret) or /\s+$/.match?(ret) or /^\-+$/.match?(ret)
       ret = '"' + ret + '"'
     end
 
@@ -129,7 +129,7 @@ module Mrtable
 
   # 32-126(0x20-0x7E), 65377-65439(0xFF61-0xFF9F)
   def self.hankaku?(c)
-    (/^[ -~｡-ﾟ]$/ =~ c) ? true : false
+    /^[ -~｡-ﾟ]$/.match?(c)
   end
 
   def self.json_encode(val)
@@ -144,7 +144,7 @@ module Mrtable
   end
 
   def self.json_decode(str)
-    if /^".*"$/ =~ str
+    if /^".*"$/.match?(str)
       JSON.parse('[' + str + ']')[0]
     else
       JSON.parse('["' + str + '"]')[0]
@@ -173,10 +173,10 @@ module Mrtable
       break if pos >= line2.size
       pos_delta = 1
       rest = line2[pos..-1]
-      if /^ \| / =~ rest
+      if /^ \| /.match?(rest)
         cols << buf; buf = ""
         pos_delta = 3
-      elsif /^\\/ =~ rest
+      elsif /^\\/.match?(rest)
         if rest[1] == "|"
           buf += rest[1]
           pos_delta = 2
@@ -196,8 +196,8 @@ module Mrtable
   def self.parse(text, opts = {})
     lines = text.split(/\r?\n/)
     lines2 = lines.reject { |line|
-      /^\s*$/ =~ line or
-      /^\| \-\-\-+ \|/ =~ line
+      /^\s*$/.match?(line) or
+      /^\| \-\-\-+ \|/.match?(line)
     }
     rows = lines2.map { |line|
       split_row(line)
