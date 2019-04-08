@@ -116,7 +116,7 @@ module Mrtable
     end
 
     ret = json_encode(col)
-    if /^\s+/ =~ ret || /\s+$/ =~ ret || /^\-+$/ =~ ret
+    if /^\s+/ =~ ret or /\s+$/ =~ ret or /^\-+$/ =~ ret
       ret = '"' + ret + '"'
     end
 
@@ -196,7 +196,7 @@ module Mrtable
   def self.parse(text, opts = {})
     lines = text.split(/\r?\n/)
     lines2 = lines.reject { |line|
-      /^\s*$/ =~ line ||
+      /^\s*$/ =~ line or
       /^\| \-\-\-+ \|/ =~ line
     }
     rows = lines2.map { |line|
