@@ -212,7 +212,7 @@ module Mrtable
       parse_col col
     }
 
-    if opts.has_key? :complement
+    if opts.key? :complement
       unless opts[:complement].is_a? String or opts[:complement].nil?
         raise "opts[:complement] must be String or nil"
       end
