@@ -94,7 +94,7 @@ module Mrtable
 
   def self.pad_right(s, n)
     rest = n - col_len(s)
-    if rest <= 0
+    if rest == 0
       return s
     end
     s + (" " * rest)
@@ -102,7 +102,7 @@ module Mrtable
 
   def self.pad_left(s, n)
     rest = n - col_len(s)
-    if rest <= 0
+    if rest == 0
       return s
     end
     (" " * rest) + s
