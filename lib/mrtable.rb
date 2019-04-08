@@ -194,8 +194,8 @@ module Mrtable
   end
 
   def self.parse(text, opts = {})
-    lines = text.split(/\r?\n/)
-    lines2 = lines.reject { |line|
+    raw_lines = text.split(/\r?\n/)
+    lines2 = raw_lines.reject { |line|
       /^\s*$/.match?(line) or
       /^\| \-\-\-+ \|/.match?(line)
     }
