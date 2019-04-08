@@ -224,7 +224,7 @@ module Mrtable
       parsed.rows
     ]
   end
-  
+
   def self.generate(header_cols, rows)
     table = Table.new(header_cols, rows)
 
