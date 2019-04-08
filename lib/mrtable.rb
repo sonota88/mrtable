@@ -162,17 +162,17 @@ module Mrtable
   end
 
   def self.split_row(line)
-    line2 = line + " "
+    work_line = line + " "
     cols = []
     buf = ""
     pos = 2
     pos_delta = nil
 
-    num_repeat_max = line2.size
+    num_repeat_max = work_line.size
     num_repeat_max.times do
-      break if pos >= line2.size
+      break if pos >= work_line.size
       pos_delta = 1
-      rest = line2[pos..-1]
+      rest = work_line[pos..-1]
       if /^ \| /.match?(rest)
         cols << buf; buf = ""
         pos_delta = 3
