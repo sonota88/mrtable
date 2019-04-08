@@ -14,13 +14,13 @@ module Mrtable
     # ci: column index
     # @return new table
     def map_col_with_ci
-      new_rows = @rows.map { |cols|
+      new_rows = @rows.map do |cols|
         new_cols = []
         cols.each_with_index { |col, ci|
           new_cols << yield(col, ci)
         }
         new_cols
-      }
+      end
 
       new_header_cols = []
       @header_cols.each_with_index { |col, ci|
@@ -32,7 +32,7 @@ module Mrtable
 
     def calc_maxlens
       num_cols = @rows[0].size
-      maxlens = (0...num_cols).map { |ci|
+      maxlens = (0...num_cols).map do |ci|
         cols_at_ci = @rows.map { |cols| cols[ci] }
         if @header_cols
           cols_at_ci << @header_cols[ci]
@@ -40,7 +40,7 @@ module Mrtable
         cols_at_ci.map { |col|
           Mrtable.col_len(col)
         }.max
-      }
+      end
 
       # compatibility for GFM
       min_len = 3
@@ -65,13 +65,13 @@ module Mrtable
   end
 
   def self.complement_cols(cols, num_cols_max, val)
-    (0...num_cols_max).map { |ci|
+    (0...num_cols_max).map do |ci|
       if ci < cols.size
         cols[ci]
       else
         val
       end
-    }
+    end
   end
 
   def self.int?(s)
