@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class MrtableTest < Minitest::Test
-  def test_serealize_col
-    assert_equal '" \\| "', Mrtable.serealize_col(" | ")
+  def test_serialize_col
+    assert_equal '" \\| "', Mrtable.serialize_col(" | ")
   end
 
   def test_complement_header_cols

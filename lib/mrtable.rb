@@ -108,7 +108,7 @@ module Mrtable
     (" " * rest) + s
   end
 
-  def self.serealize_col(col)
+  def self.serialize_col(col)
     if col.nil?
       return ""
     elsif col == ""
@@ -229,13 +229,13 @@ module Mrtable
   def self.generate(header_cols, rows)
     table = Table.new(header_cols, rows)
 
-    serealized = table.map_col_with_ci { |col, _|
-      serealize_col col
+    serialized = table.map_col_with_ci { |col, _|
+      serialize_col col
     }
 
-    maxlens = serealized.calc_maxlens()
+    maxlens = serialized.calc_maxlens()
 
-    padded = serealized.map_col_with_ci { |col, ci|
+    padded = serialized.map_col_with_ci { |col, ci|
       pad_col col, maxlens[ci]
     }
 
