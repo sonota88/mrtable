@@ -194,11 +194,12 @@ module Mrtable
   end
 
   def self.parse(text, opts = {})
-    raw_lines = text.split(/\r?\n/)
-    lines = raw_lines.reject { |line|
-      /^\s*$/.match?(line) or
-      /^\| \-\-\-+ \|/.match?(line)
-    }
+    lines = text
+      .split(/\r?\n/)
+      .reject { |line|
+        /^\s*$/.match?(line) or
+        /^\| \-\-\-+ \|/.match?(line)
+      }
     rows = lines.map { |line|
       split_row(line)
     }
