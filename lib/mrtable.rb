@@ -14,13 +14,13 @@ module Mrtable
     # ci: column index
     # @return new table
     def map_col_with_ci
-      new_rows = @rows.map { |cols|
+      new_rows = @rows.map do |cols|
         new_cols = []
         cols.each_with_index { |col, ci|
           new_cols << yield(col, ci)
         }
         new_cols
-      }
+      end
 
       new_header_cols = []
       @header_cols.each_with_index { |col, ci|
@@ -32,15 +32,15 @@ module Mrtable
 
     def calc_maxlens
       num_cols = @rows[0].size
-      maxlens = (0...num_cols).map { |ci|
+      maxlens = (0...num_cols).map do |ci|
         cols_at_ci = @rows.map { |cols| cols[ci] }
         if @header_cols
           cols_at_ci << @header_cols[ci]
         end
-        cols_at_ci.map { |col|
-          Mrtable.col_len(col)
-        }.max
-      }
+        cols_at_ci
+          .map { |col| Mrtable.col_len(col) }
+          .max
+      end
 
       # compatibility for GFM
       min_len = 3
@@ -65,17 +65,17 @@ module Mrtable
   end
 
   def self.complement_cols(cols, num_cols_max, val)
-    (0...num_cols_max).map { |ci|
+    (0...num_cols_max).map do |ci|
       if ci < cols.size
         cols[ci]
       else
         val
       end
-    }
+    end
   end
 
   def self.int?(s)
-    /^\-?[\d,]+$/ =~ s
+    /^\-?[\d,]+$/.match?(s)
   end
 
   def self.pad_col(col, maxlen)
@@ -94,7 +94,7 @@ module Mrtable
 
   def self.pad_right(s, n)
     rest = n - col_len(s)
-    if rest <= 0
+    if rest == 0
       return s
     end
     s + (" " * rest)
@@ -102,13 +102,13 @@ module Mrtable
 
   def self.pad_left(s, n)
     rest = n - col_len(s)
-    if rest <= 0
+    if rest == 0
       return s
     end
     (" " * rest) + s
   end
 
-  def self.serealize_col(col)
+  def self.serialize_col(col)
     if col.nil?
       return ""
     elsif col == ""
@@ -116,7 +116,7 @@ module Mrtable
     end
 
     ret = json_encode(col)
-    if /^\s+/ =~ ret || /\s+$/ =~ ret || /^\-+$/ =~ ret
+    if /^\s+/.match?(ret) or /\s+$/.match?(ret) or /^\-+$/.match?(ret)
       ret = '"' + ret + '"'
     end
 
@@ -129,7 +129,7 @@ module Mrtable
 
   # 32-126(0x20-0x7E), 65377-65439(0xFF61-0xFF9F)
   def self.hankaku?(c)
-    (/^[ -~｡-ﾟ]$/ =~ c) ? true : false
+    /^[ -~｡-ﾟ]$/.match?(c)
   end
 
   def self.json_encode(val)
@@ -144,7 +144,7 @@ module Mrtable
   end
 
   def self.json_decode(str)
-    if /^".*"$/ =~ str
+    if /^".*"$/.match?(str)
       JSON.parse('[' + str + ']')[0]
     else
       JSON.parse('["' + str + '"]')[0]
@@ -162,21 +162,21 @@ module Mrtable
   end
 
   def self.split_row(line)
-    line2 = line + " "
+    work_line = line + " "
     cols = []
     buf = ""
     pos = 2
     pos_delta = nil
 
-    num_repeat_max = line2.size
+    num_repeat_max = work_line.size
     num_repeat_max.times do
-      break if pos >= line2.size
+      break if pos >= work_line.size
       pos_delta = 1
-      rest = line2[pos..-1]
-      if /^ \| / =~ rest
+      rest = work_line[pos..-1]
+      if /^ \| /.match?(rest)
         cols << buf; buf = ""
         pos_delta = 3
-      elsif /^\\/ =~ rest
+      elsif /^\\/.match?(rest)
         if rest[1] == "|"
           buf += rest[1]
           pos_delta = 2
@@ -194,12 +194,13 @@ module Mrtable
   end
 
   def self.parse(text, opts = {})
-    lines = text.split(/\r?\n/)
-    lines2 = lines.reject { |line|
-      /^\s*$/ =~ line ||
-      /^\| \-\-\-+ \|/ =~ line
-    }
-    rows = lines2.map { |line|
+    lines = text
+      .split(/\r?\n/)
+      .reject { |line|
+        /^\s*$/.match?(line) or
+        /^\| \-\-\-+ \|/.match?(line)
+      }
+    rows = lines.map { |line|
       split_row(line)
     }
     raw = Table.new rows[0], rows[1..-1]
@@ -212,29 +213,29 @@ module Mrtable
       parse_col col
     }
 
-    if opts.has_key? :complement
+    if opts.key? :complement
       unless opts[:complement].is_a? String or opts[:complement].nil?
         raise "opts[:complement] must be String or nil"
       end
       parsed = parsed.complement opts[:complement]
     end
 
-    {
-      :header_cols => parsed.header_cols,
-      :rows => parsed.rows
-    }
+    [
+      parsed.header_cols,
+      parsed.rows
+    ]
   end
-  
+
   def self.generate(header_cols, rows)
     table = Table.new(header_cols, rows)
 
-    serealized = table.map_col_with_ci { |col, _|
-      serealize_col col
+    serialized = table.map_col_with_ci { |col, _|
+      serialize_col col
     }
 
-    maxlens = serealized.calc_maxlens()
+    maxlens = serialized.calc_maxlens()
 
-    padded = serealized.map_col_with_ci { |col, ci|
+    padded = serialized.map_col_with_ci { |col, ci|
       pad_col col, maxlens[ci]
     }
 
@@ -244,6 +245,8 @@ module Mrtable
     lines += padded.rows.map { |cols|
       to_table_row(cols)
     }
-    lines.map { |line| line + "\n" }.join("")
+    lines
+      .map { |line| line + "\n" }
+      .join("")
   end
 end

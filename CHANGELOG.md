@@ -1,3 +1,12 @@
+# 0.0.4
+
+- refactoring
+
+## Breaking changes
+
+- `Mrtable.parse`
+  - Change return value type: Hash => Array
+
 # 0.0.3
 
 - feat: Complement lacking columns
