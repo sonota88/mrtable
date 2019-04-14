@@ -1,6 +1,7 @@
 # coding: utf-8
 
 require "json"
+require File.join(__dir__, "mrtable/version")
 
 module Mrtable
   class Table
